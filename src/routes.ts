@@ -52,45 +52,6 @@ export function RegisterRoutes(app: express.Express) {
             const promise = controller.create.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, next);
         });
-    // app.put('/todo/:id',
-    //     function(request: any, response: any, next: any) {
-    //         const args = {
-    //             id: { "in": "path", "name": "id", "required": true, "dataType": "string" },
-    //             description: { "in": "body-prop", "name": "description", "required": true, "dataType": "string" },
-    //         };
-
-    //         let validatedArgs: any[] = [];
-    //         try {
-    //             validatedArgs = getValidatedArgs(args, request);
-    //         } catch (err) {
-    //             return next(err);
-    //         }
-
-    //         const controller = new UsersController();
-
-
-    //         const promise = controller.update.apply(controller, validatedArgs as any);
-    //         promiseHandler(controller, promise, response, next);
-    //     });
-    // app.delete('/todo/:id',
-    //     function(request: any, response: any, next: any) {
-    //         const args = {
-    //             id: { "in": "path", "name": "id", "required": true, "dataType": "string" },
-    //         };
-
-    //         let validatedArgs: any[] = [];
-    //         try {
-    //             validatedArgs = getValidatedArgs(args, request);
-    //         } catch (err) {
-    //             return next(err);
-    //         }
-
-    //         const controller = new UsersController();
-
-
-    //         const promise = controller.remove.apply(controller, validatedArgs as any);
-    //         promiseHandler(controller, promise, response, next);
-    //     });
 
 
     function isController(object: any): object is Controller {
