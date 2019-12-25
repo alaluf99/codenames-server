@@ -1,35 +1,25 @@
-import * as express from 'express'
-import { Application } from 'express'
+import * as express from 'express';
+import * as cors from 'cors';
+import * as bodyparser from 'body-parser';
 
-class App {
-    public app: Application
-    public port: number
+import { requestLoggerMiddleware } from './request.logger.middleware';
+import './todo.controller';
 
-    constructor(appInit: { port: number; middleWares: any; controllers: any; }) {
-        this.app = express()
-        this.port = appInit.port
+import { RegisterRoutes } from './routes';
+import * as swaggerUi from 'swagger-ui-express';
 
-        this.middlewares(appInit.middleWares)
-        this.routes(appInit.controllers)
-    }
+const app = express();
+app.use(cors());
+app.use(bodyparser.json());
 
-    private middlewares(middleWares: { forEach: (arg0: (middleWare: any) => void) => void; }) {
-        middleWares.forEach(middleWare => {
-            this.app.use(middleWare)
-        })
-    }
+app.use(requestLoggerMiddleware);
+RegisterRoutes(app);
 
-    private routes(controllers: { forEach: (arg0: (controller: any) => void) => void; }) {
-        controllers.forEach(controller => {
-            this.app.use('/', controller.router)
-        })
-    }
-
-    public listen() {
-        this.app.listen(this.port, () => {
-            console.log(`App listening on the http://localhost:${this.port}`)
-        })
-    }
+try {
+	const swaggerDocument = require('../swagger.json');
+	app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+} catch (err) {
+	console.error('Unable to read swagger.json', err);
 }
 
-export default App
+export { app };
