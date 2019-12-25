@@ -1,7 +1,10 @@
 {
 	"compilerOptions": {
-		"target": "esnext",
+		"target": "es6",
 		"moduleResolution": "node",
-		"experimentalDecorators": true
+		"module": "commonjs",
+		"experimentalDecorators": true,
+		"outDir": "./dist",
+        "baseUrl": "./src",
 	}
 }

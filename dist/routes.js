@@ -1,9 +1,9 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 /* tslint:disable */
-import { Controller, ValidationService, FieldErrors, ValidateError, TsoaRoute } from 'tsoa';
-import { UsersController } from './Controller/users.controller';
-import * as express from 'express';
-
-const models: TsoaRoute.Models = {
+const tsoa_1 = require("tsoa");
+const users_controller_1 = require("./Controller/users.controller");
+const models = {
     "ITodo": {
         "properties": {
             "_id": { "dataType": "string", "required": true },
@@ -11,64 +11,50 @@ const models: TsoaRoute.Models = {
         },
     },
 };
-const validationService = new ValidationService(models);
-
-export function RegisterRoutes(app: express.Express) {
-    app.get('/users',
-        function(request: any, response: any, next: any) {
-            const args = {
-            };
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = new UsersController();
-
-
-            const promise = controller.getAll.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, next);
-        });
-    app.post('/users',
-        function(request: any, response: any, next: any) {
-            const args = {
-                name: { "in": "body-prop", "name": "name", "required": true, "dataType": "string" },
-                password: { "in": "body-prop", "name": "password", "required": true, "dataType": "string" }
-            };
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = new UsersController();
-
-
-            const promise = controller.create.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, next);
-        });
+const validationService = new tsoa_1.ValidationService(models);
+function RegisterRoutes(app) {
+    app.get('/users', function (request, response, next) {
+        const args = {};
+        let validatedArgs = [];
+        try {
+            validatedArgs = getValidatedArgs(args, request);
+        }
+        catch (err) {
+            return next(err);
+        }
+        const controller = new users_controller_1.UsersController();
+        const promise = controller.getAll.apply(controller, validatedArgs);
+        promiseHandler(controller, promise, response, next);
+    });
+    app.post('/users', function (request, response, next) {
+        const args = {
+            name: { "in": "body-prop", "name": "name", "required": true, "dataType": "string" },
+            password: { "in": "body-prop", "name": "password", "required": true, "dataType": "string" }
+        };
+        let validatedArgs = [];
+        try {
+            validatedArgs = getValidatedArgs(args, request);
+        }
+        catch (err) {
+            return next(err);
+        }
+        const controller = new users_controller_1.UsersController();
+        const promise = controller.create.apply(controller, validatedArgs);
+        promiseHandler(controller, promise, response, next);
+    });
     // app.put('/todo/:id',
     //     function(request: any, response: any, next: any) {
     //         const args = {
     //             id: { "in": "path", "name": "id", "required": true, "dataType": "string" },
     //             description: { "in": "body-prop", "name": "description", "required": true, "dataType": "string" },
     //         };
-
     //         let validatedArgs: any[] = [];
     //         try {
     //             validatedArgs = getValidatedArgs(args, request);
     //         } catch (err) {
     //             return next(err);
     //         }
-
     //         const controller = new UsersController();
-
-
     //         const promise = controller.update.apply(controller, validatedArgs as any);
     //         promiseHandler(controller, promise, response, next);
     //     });
@@ -77,50 +63,41 @@ export function RegisterRoutes(app: express.Express) {
     //         const args = {
     //             id: { "in": "path", "name": "id", "required": true, "dataType": "string" },
     //         };
-
     //         let validatedArgs: any[] = [];
     //         try {
     //             validatedArgs = getValidatedArgs(args, request);
     //         } catch (err) {
     //             return next(err);
     //         }
-
     //         const controller = new UsersController();
-
-
     //         const promise = controller.remove.apply(controller, validatedArgs as any);
     //         promiseHandler(controller, promise, response, next);
     //     });
-
-
-    function isController(object: any): object is Controller {
+    function isController(object) {
         return 'getHeaders' in object && 'getStatus' in object && 'setStatus' in object;
     }
-
-    function promiseHandler(controllerObj: any, promise: any, response: any, next: any) {
+    function promiseHandler(controllerObj, promise, response, next) {
         return Promise.resolve(promise)
-            .then((data: any) => {
-                let statusCode;
-                if (isController(controllerObj)) {
-                    const headers = controllerObj.getHeaders();
-                    Object.keys(headers).forEach((name: string) => {
-                        response.set(name, headers[name]);
-                    });
-
-                    statusCode = controllerObj.getStatus();
-                }
-
-                if (data || data === false) { // === false allows boolean result
-                    response.status(statusCode || 200).json(data);
-                } else {
-                    response.status(statusCode || 204).end();
-                }
-            })
-            .catch((error: any) => next(error));
+            .then((data) => {
+            let statusCode;
+            if (isController(controllerObj)) {
+                const headers = controllerObj.getHeaders();
+                Object.keys(headers).forEach((name) => {
+                    response.set(name, headers[name]);
+                });
+                statusCode = controllerObj.getStatus();
+            }
+            if (data || data === false) { // === false allows boolean result
+                response.status(statusCode || 200).json(data);
+            }
+            else {
+                response.status(statusCode || 204).end();
+            }
+        })
+            .catch((error) => next(error));
     }
-
-    function getValidatedArgs(args: any, request: any): any[] {
-        const fieldErrors: FieldErrors = {};
+    function getValidatedArgs(args, request) {
+        const fieldErrors = {};
         const values = Object.keys(args).map((key) => {
             const name = args[key].name;
             switch (args[key].in) {
@@ -139,8 +116,9 @@ export function RegisterRoutes(app: express.Express) {
             }
         });
         if (Object.keys(fieldErrors).length > 0) {
-            throw new ValidateError(fieldErrors, '');
+            throw new tsoa_1.ValidateError(fieldErrors, '');
         }
         return values;
     }
 }
+exports.RegisterRoutes = RegisterRoutes;
