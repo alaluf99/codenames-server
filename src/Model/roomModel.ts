@@ -15,7 +15,7 @@ enum teams{
 enum userInTeamType{
     'REGULAR' = 'REGULAR',
     'TEAM_LEADER' = 'TEAM_LEADER',
-    'SUPER_SPY' = 'TEAM_LEADER'
+    'SUPER_SPY' = 'SUPER_SPY'
 }
 
 interface IUserInRoom extends mongoose.Document{
