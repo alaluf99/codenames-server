@@ -28,9 +28,9 @@ interface IRoom extends mongoose.Document{
 }
 
 const userInRoomSchema = new mongoose.Schema({
-    user_id: {type: mongoose.Schema.Types.ObjectId, ref: 'users', required: true},
-    team: {type: String, enum: ['RED', 'BLUE'], required: true},
-    userType: {type: String, enumm: ['REGULAR', 'TEAM_LEADER', 'SUPER_SPY'], required: true},
+    user_id: {type: mongoose.Schema.Types.String, ref: 'users', required: true, unique: true},
+    team: {type: String, enum: ['RED', 'BLUE'], required: false},
+    userType: {type: String, enumm: ['REGULAR', 'TEAM_LEADER', 'SUPER_SPY'], required: false},
     isAdmin: {type: Boolean, required: true}
 });
 

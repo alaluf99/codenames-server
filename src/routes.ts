@@ -33,8 +33,28 @@ export function RegisterRoutes(app: express.Express) {
             const promise = controller.getAll.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, next);
         });
-    app.post('/users',
+    app.post('/users/signIn',
         function(request: any, response: any, next: any) {
+            const args = {
+                name: { "in": "body-prop", "name": "name", "required": true, "dataType": "string" },
+                password: { "in": "body-prop", "name": "password", "required": true, "dataType": "string" }
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new UsersController();
+
+
+            const promise = controller.userExist.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+    app.post('/users/signUp',
+        function (request: any, response: any, next: any) {
             const args = {
                 name: { "in": "body-prop", "name": "name", "required": true, "dataType": "string" },
                 password: { "in": "body-prop", "name": "password", "required": true, "dataType": "string" }
@@ -77,12 +97,14 @@ export function RegisterRoutes(app: express.Express) {
                 name: { "in": "body-prop", "name": "name", "required": true, "dataType": "string" },
                 status: { "in": "body-prop", "name": "status", "required": true, "dataType": "string" },
                 cards: { "in": "body-prop", "name": "cards", "required": false, "dataType": "cards" },
-                users: { "in": "body-prop", "name": "users", "required": false, "dataType": "userInRoom" }
+                users: { "in": "body-prop", "name": "user", "required": true, "dataType": "string" }
             };
             
             let validatedArgs: any[] = [];
             try {
                 validatedArgs = getValidatedArgs(args, request);
+                if (!request.body.user) {
+                    throw new Error('Expected get user');                }
             } catch (err) {
                 return next(err);
             }
@@ -95,8 +117,8 @@ export function RegisterRoutes(app: express.Express) {
     app.post('/rooms/User',
         function(request: any, response: any, next: any) {
         const args = {
-                name: { "in": "body-prop", "name": "id", "required": true, "dataType": "string" },
-                users: { "in": "body-prop", "name": "user", "required": true, "dataType": "userInRoom" }
+                name: { "in": "body-prop", "name": "roomId", "required": true, "dataType": "string" },
+                users: { "in": "body-prop", "name": "userId", "required": true, "dataType": "string" }
             };
             
             let validatedArgs: any[] = [];
@@ -108,7 +130,7 @@ export function RegisterRoutes(app: express.Express) {
 
             const controller = new UsersInRoomController();
             
-            const promise = controller.addUsersToRoom.apply(controller, validatedArgs as any);
+            const promise = controller.addUserToRoom.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, next);
         });
     app.delete('/rooms/User',
