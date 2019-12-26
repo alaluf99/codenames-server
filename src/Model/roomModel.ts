@@ -2,15 +2,20 @@ import * as mongoose from 'mongoose';
 import {ICard, CardSchema} from './CardModel'
 
 enum roomStatus{
-    WAITING, INITIALIZE, ACTIVE
+    'WAITING' = 'WAITING',
+    'INITIALIZE' = 'INITIALIZE',
+    'ACTIVE' = 'ACTIVE'
 }
 
 enum teams{
-    RED, BLUE
+    'RED' = 'RED',
+    'BLUE' = 'BLUE'
 }
 
 enum userInTeamType{
-    REGULAR, TEAM_LEADER, SUPER_SPY
+    'REGULAR' = 'REGULAR',
+    'TEAM_LEADER' = 'TEAM_LEADER',
+    'SUPER_SPY' = 'SUPER_SPY'
 }
 
 interface IUserInRoom extends mongoose.Document{

@@ -40,7 +40,7 @@ export class RoomsController extends Controller {
 	}
 }
 
-@Route('/rooms/User')
+@Route('/rooms/user')
 export class UsersInRoomController extends Controller{
 	@Post()
 	public async addUserToRoom(@BodyProp() roomId: string, @BodyProp() userId: string) : Promise<IRoom>{
@@ -50,6 +50,12 @@ export class UsersInRoomController extends Controller{
 			user_id: userId,
 			isAdmin: true
 		}
+
+		room.users.forEach((item) => {
+			if (item.user_id == userInRoom.id)
+				this.setStatus(400);
+			return;
+		});
 
 		room.users.push(userInRoom);
 		try{
