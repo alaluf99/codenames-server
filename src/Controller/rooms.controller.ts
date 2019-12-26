@@ -23,7 +23,6 @@ export class RoomsController extends Controller {
 			return await item.save();
 		} catch(err) {
 			this.setStatus(500);
-			console.log(err);
 			console.error('Could not create room', err);
 		}
 	}
