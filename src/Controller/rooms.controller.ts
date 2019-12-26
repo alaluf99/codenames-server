@@ -29,11 +29,16 @@ export class RoomsController extends Controller {
 	}
 }
 
-@Route('/rooms/User')
+@Route('/rooms/user')
 export class UsersInRoomController extends Controller{
 	@Post()
 	public async addUsersToRoom(@BodyProp() id: string, @BodyProp() usersInRoom: IUserInRoom) : Promise<IRoom>{
 		let room: IRoom = await roomModel.findById(id);
+		room.users.forEach((item) => {
+			if (item.user_id == usersInRoom.id)
+				this.setStatus(400);
+			return;
+		});
 		room.users.push(usersInRoom);
 		try{
 			return await room.save();

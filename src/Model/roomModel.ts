@@ -6,7 +6,8 @@ enum roomStatus{
 }
 
 enum teams{
-    RED, BLUE
+    'RED' = 'RED',
+    'BLUE' = 'BLUE'
 }
 
 enum userInTeamType{

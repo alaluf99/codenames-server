@@ -3,6 +3,7 @@ import { Controller, ValidationService, FieldErrors, ValidateError, TsoaRoute } 
 import { UsersController } from './Controller/users.controller';
 import { RoomsController, UsersInRoomController } from './Controller/rooms.controller';
 import * as express from 'express';
+import { RoomsInitController } from './Controller/roomInitController';
 
 const models: TsoaRoute.Models = {
     "IUsers": {
@@ -110,7 +111,7 @@ export function RegisterRoutes(app: express.Express) {
             const promise = controller.addUsersToRoom.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, next);
         });
-    app.delete('/rooms/User',
+    app.delete('/rooms/user',
         function(request: any, response: any, next: any) {
         const args = {
                 name: { "in": "body-prop", "name": "room_id", "required": true, "dataType": "string" },
@@ -129,7 +130,24 @@ export function RegisterRoutes(app: express.Express) {
             const promise = controller.removeUserFromRoom.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, next);
         });
+    app.post('/rooms/init',
+    function(request: any, response: any, next: any) {
+    const args = {
+            name: { "in": "body-prop", "name": "room_id", "required": true, "dataType": "string" }
+        };
+        
+        let validatedArgs: any[] = [];
+        try {
+            validatedArgs = getValidatedArgs(args, request);
+        } catch (err) {
+            return next(err);
+        }
 
+        const controller = new RoomsInitController();
+        
+        const promise = controller.initRoom.apply(controller, validatedArgs as any);
+        promiseHandler(controller, promise, response, next);
+    });
 
     function isController(object: any): object is Controller {
         return 'getHeaders' in object && 'getStatus' in object && 'setStatus' in object;

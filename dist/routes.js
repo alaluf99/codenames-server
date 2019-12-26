@@ -4,6 +4,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var tsoa_1 = require("tsoa");
 var users_controller_1 = require("./Controller/users.controller");
 var rooms_controller_1 = require("./Controller/rooms.controller");
+var roomInitController_1 = require("./Controller/roomInitController");
 var models = {
     "IUsers": {
         "properties": {
@@ -89,7 +90,7 @@ function RegisterRoutes(app) {
         var promise = controller.addUsersToRoom.apply(controller, validatedArgs);
         promiseHandler(controller, promise, response, next);
     });
-    app.delete('/rooms/User', function (request, response, next) {
+    app.delete('/rooms/user', function (request, response, next) {
         var args = {
             name: { "in": "body-prop", "name": "room_id", "required": true, "dataType": "string" },
             users: { "in": "body-prop", "name": "userInRoom_id", "required": true, "dataType": "string" }
@@ -103,6 +104,21 @@ function RegisterRoutes(app) {
         }
         var controller = new rooms_controller_1.UsersInRoomController();
         var promise = controller.removeUserFromRoom.apply(controller, validatedArgs);
+        promiseHandler(controller, promise, response, next);
+    });
+    app.post('/rooms/init', function (request, response, next) {
+        var args = {
+            name: { "in": "body-prop", "name": "room_id", "required": true, "dataType": "string" }
+        };
+        var validatedArgs = [];
+        try {
+            validatedArgs = getValidatedArgs(args, request);
+        }
+        catch (err) {
+            return next(err);
+        }
+        var controller = new roomInitController_1.RoomsInitController();
+        var promise = controller.initRoom.apply(controller, validatedArgs);
         promiseHandler(controller, promise, response, next);
     });
     function isController(object) {
