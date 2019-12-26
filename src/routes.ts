@@ -169,7 +169,7 @@ export function RegisterRoutes(app: express.Express) {
     app.post('/rooms/init',
     function(request: any, response: any, next: any) {
     const args = {
-            name: { "in": "body-prop", "name": "room_id", "required": true, "dataType": "string" }
+            name: { "in": "body-prop", "name": "roomId", "required": true, "dataType": "string" }
         };
         
         let validatedArgs: any[] = [];

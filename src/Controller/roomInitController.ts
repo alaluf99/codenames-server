@@ -6,7 +6,7 @@ import { ICard } from '../Model/CardModel';
 export class RoomsInitController extends Controller {
 
     @Post()
-    public async initRoom(@BodyProp() room_id: string) : Promise<IRoom>{
+    public async initRoom(@BodyProp() roomId: string) : Promise<IRoom>{
         /** 
          * Room initiation sequence:
          * 1. Randomize groups
@@ -16,7 +16,7 @@ export class RoomsInitController extends Controller {
          * 5. Randomize cards
          **/
 
-        let room = await roomModel.findById(room_id);
+        let room = await roomModel.findById(roomId);
         room.status = roomStatus.INITIALIZE;
         room.save;
          
