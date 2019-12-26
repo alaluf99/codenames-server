@@ -152,7 +152,19 @@ export function RegisterRoutes(app: express.Express) {
             const promise = controller.removeUserFromRoom.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, next);
         });
-
+    // app.post('/messages', (req, res) => {
+    //     var message = new Message(req.body);
+    //     message.save((err) => {
+    //         if (err)
+    //             sendStatus(500);
+    //         res.sendStatus(200);
+    //     })
+    // })
+    // app.get('/messages', (req, res) => {
+    //     Message.find({}, (err, messages) => {
+    //         res.send(messages);
+    //     })
+    // })
 
     function isController(object: any): object is Controller {
         return 'getHeaders' in object && 'getStatus' in object && 'setStatus' in object;
