@@ -57,8 +57,8 @@ export class RoomsInitController extends Controller {
         });
         usersArray[indexOfMaxRed].user.userType = userInTeamType.SUPER_SPY;
         usersArray[indexOfMaxRed+1].user.userType = userInTeamType.TEAM_LEADER;
-        usersArray[indexOfMaxRed].user.userType = userInTeamType.SUPER_SPY;
-        usersArray[indexOfMaxRed+1].user.userType = userInTeamType.TEAM_LEADER;
+        usersArray[indexOfMaxRed-1].user.userType = userInTeamType.SUPER_SPY;
+        usersArray[indexOfMaxRed-2].user.userType = userInTeamType.TEAM_LEADER;
         
         usersArray.forEach(element => {
             let idx = room.users.findIndex(element1 => element1.user_id == element.user.user_id);
