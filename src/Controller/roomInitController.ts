@@ -16,7 +16,9 @@ export class RoomsInitController extends Controller {
          * 5. Randomize cards
          **/
 
-         let room = await roomModel.findById(room_id);
+        let room = await roomModel.findById(room_id);
+        room.status = roomStatus.INITIALIZE;
+        room.save;
          
         let numOfUsersInRoom = room.users.length;
 
@@ -64,7 +66,12 @@ export class RoomsInitController extends Controller {
             room.users[idx].userType = element.user.userType;
         });
 
+        await room.save();
+        room.status = roomStatus.ACTIVE;
         return await room.save();
+
+        
+        
     }
     private medianFunc(arr: number[]): Number {
         const mid = Math.floor(arr.length/2);

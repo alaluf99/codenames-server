@@ -61,6 +61,7 @@ function RegisterRoutes(app) {
         var args = {
             name: { "in": "body-prop", "name": "name", "required": true, "dataType": "string" },
             status: { "in": "body-prop", "name": "status", "required": true, "dataType": "string" },
+            cards: { "in": "body-prop", "name": "cards", "required": false, "dataType": "cards" },
             users: { "in": "body-prop", "name": "users", "required": false, "dataType": "userInRoom" }
         };
         var validatedArgs = [];
