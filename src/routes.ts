@@ -1,7 +1,7 @@
 /* tslint:disable */
 import { Controller, ValidationService, FieldErrors, ValidateError, TsoaRoute } from 'tsoa';
 import { UsersController } from './Controller/users.controller';
-import { RoomsController } from './Controller/rooms.controller';
+import { RoomsController, UsersInRoomController } from './Controller/rooms.controller';
 import * as express from 'express';
 
 const models: TsoaRoute.Models = {
@@ -76,8 +76,7 @@ export function RegisterRoutes(app: express.Express) {
             const args = {
                 name: { "in": "body-prop", "name": "name", "required": true, "dataType": "string" },
                 status: { "in": "body-prop", "name": "status", "required": true, "dataType": "string" },
-                cards: { "in": "body-prop", "name": "cards", "required": true, "dataType": "cards" },
-                users: { "in": "body-prop", "name": "users", "required": true, "dataType": "userInRoom" }
+                users: { "in": "body-prop", "name": "users", "required": false, "dataType": "userInRoom" }
             };
             
             let validatedArgs: any[] = [];
@@ -91,8 +90,45 @@ export function RegisterRoutes(app: express.Express) {
             
             const promise = controller.create.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, next);
-        }
-    );
+        });
+    app.post('/rooms/User',
+        function(request: any, response: any, next: any) {
+        const args = {
+                name: { "in": "body-prop", "name": "id", "required": true, "dataType": "string" },
+                users: { "in": "body-prop", "name": "user", "required": true, "dataType": "userInRoom" }
+            };
+            
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new UsersInRoomController();
+            
+            const promise = controller.addUsersToRoom.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+    app.delete('/rooms/User',
+        function(request: any, response: any, next: any) {
+        const args = {
+                name: { "in": "body-prop", "name": "room_id", "required": true, "dataType": "string" },
+                users: { "in": "body-prop", "name": "userInRoom_id", "required": true, "dataType": "string" }
+            };
+            
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new UsersInRoomController();
+            
+            const promise = controller.removeUserFromRoom.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
 
 
     function isController(object: any): object is Controller {

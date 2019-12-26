@@ -21,7 +21,6 @@ interface IUserInRoom extends mongoose.Document{
 }
 
 interface IRoom extends mongoose.Document{
-    id: string;
     name: string;
     status: roomStatus;
     cards: Array<ICard>;
@@ -36,7 +35,6 @@ const userInRoomSchema = new mongoose.Schema({
 });
 
 const roomSchema = new mongoose.Schema({
-    id: {type: String, required: true, unique: true},
     name: {type: String, required: true},
     status: {type: String, enum: ['WAITING', 'INITIALIZE', 'ACTIVE'], required: true},
     cards: [CardSchema],

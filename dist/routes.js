@@ -60,8 +60,7 @@ function RegisterRoutes(app) {
         var args = {
             name: { "in": "body-prop", "name": "name", "required": true, "dataType": "string" },
             status: { "in": "body-prop", "name": "status", "required": true, "dataType": "string" },
-            cards: { "in": "body-prop", "name": "cards", "required": true, "dataType": "cards" },
-            users: { "in": "body-prop", "name": "users", "required": true, "dataType": "userInRoom" }
+            users: { "in": "body-prop", "name": "users", "required": false, "dataType": "userInRoom" }
         };
         var validatedArgs = [];
         try {
@@ -72,6 +71,38 @@ function RegisterRoutes(app) {
         }
         var controller = new rooms_controller_1.RoomsController();
         var promise = controller.create.apply(controller, validatedArgs);
+        promiseHandler(controller, promise, response, next);
+    });
+    app.post('/rooms/User', function (request, response, next) {
+        var args = {
+            name: { "in": "body-prop", "name": "id", "required": true, "dataType": "string" },
+            users: { "in": "body-prop", "name": "user", "required": true, "dataType": "userInRoom" }
+        };
+        var validatedArgs = [];
+        try {
+            validatedArgs = getValidatedArgs(args, request);
+        }
+        catch (err) {
+            return next(err);
+        }
+        var controller = new rooms_controller_1.UsersInRoomController();
+        var promise = controller.addUsersToRoom.apply(controller, validatedArgs);
+        promiseHandler(controller, promise, response, next);
+    });
+    app.delete('/rooms/User', function (request, response, next) {
+        var args = {
+            name: { "in": "body-prop", "name": "room_id", "required": true, "dataType": "string" },
+            users: { "in": "body-prop", "name": "userInRoom_id", "required": true, "dataType": "string" }
+        };
+        var validatedArgs = [];
+        try {
+            validatedArgs = getValidatedArgs(args, request);
+        }
+        catch (err) {
+            return next(err);
+        }
+        var controller = new rooms_controller_1.UsersInRoomController();
+        var promise = controller.removeUserFromRoom.apply(controller, validatedArgs);
         promiseHandler(controller, promise, response, next);
     });
     function isController(object) {

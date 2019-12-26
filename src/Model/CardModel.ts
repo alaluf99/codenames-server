@@ -12,7 +12,7 @@ interface ICard {
 }
 
 const CardSchema = new mongoose.Schema({
-    word: {type: String, required: true, unique: true},
+    word: {type: String, required: true},
     type: {type: String, enum: ['SPY', 'CITIZEN', 'ASSASIN'], required: true},
     isExposed: {type: Boolean, required: true},
     positionOnBoard: {type: Number, required: true}

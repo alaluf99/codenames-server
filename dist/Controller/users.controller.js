@@ -60,7 +60,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var UsersModel_1 = require("../Model/UsersModel");
 var tsoa_1 = require("tsoa");
-var uuid_1 = require("uuid");
 var UsersController = /** @class */ (function (_super) {
     __extends(UsersController, _super);
     function UsersController() {
@@ -76,7 +75,7 @@ var UsersController = /** @class */ (function (_super) {
                         return [4 /*yield*/, UsersModel_1.userModel.find({})];
                     case 1:
                         items = _a.sent();
-                        items = items.map(function (item) { return { id: item.id, name: item.name, password: item.password }; });
+                        items = items.map(function (item) { return { id: item._id, name: item.name, password: item.password }; });
                         return [2 /*return*/, items];
                     case 2:
                         err_1 = _a.sent();
@@ -94,7 +93,7 @@ var UsersController = /** @class */ (function (_super) {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        item = new UsersModel_1.userModel({ id: uuid_1.v4(), name: name, password: password });
+                        item = new UsersModel_1.userModel({ name: name, password: password });
                         return [4 /*yield*/, item.save()];
                     case 1:
                         _a.sent();
