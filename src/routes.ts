@@ -1,10 +1,11 @@
 /* tslint:disable */
 import { Controller, ValidationService, FieldErrors, ValidateError, TsoaRoute } from 'tsoa';
 import { UsersController } from './Controller/users.controller';
+import { RoomsController } from './Controller/rooms.controller';
 import * as express from 'express';
 
 const models: TsoaRoute.Models = {
-    "ITodo": {
+    "IUsers": {
         "properties": {
             "_id": { "dataType": "string", "required": true },
             "description": { "dataType": "string", "required": true },
@@ -52,6 +53,46 @@ export function RegisterRoutes(app: express.Express) {
             const promise = controller.create.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, next);
         });
+    app.get('/rooms',
+        function(request: any, response: any, next: any) {
+            const args = {
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new RoomsController();
+
+
+            const promise = controller.getAll.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+    app.post('/rooms',
+        function(request: any, response: any, next: any) {
+            const args = {
+                name: { "in": "body-prop", "name": "name", "required": true, "dataType": "string" },
+                status: { "in": "body-prop", "name": "status", "required": true, "dataType": "string" },
+                cards: { "in": "body-prop", "name": "cards", "required": true, "dataType": "cards" },
+                users: { "in": "body-prop", "name": "users", "required": true, "dataType": "userInRoom" }
+            };
+            
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new RoomsController();
+            
+            const promise = controller.create.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        }
+    );
 
 
     function isController(object: any): object is Controller {

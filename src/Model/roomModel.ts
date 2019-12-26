@@ -1,6 +1,5 @@
 import * as mongoose from 'mongoose';
-import {cardModel, ICard, cardType} from './CardModel'
-import {userModel} from './UsersModel'
+import {ICard, CardSchema} from './CardModel'
 
 enum roomStatus{
     WAITING, INITIALIZE, ACTIVE
@@ -14,19 +13,19 @@ enum userInTeamType{
     REGULAR, TEAM_LEADER, SUPER_SPY
 }
 
-interface IUserInRoom{
+interface IUserInRoom extends mongoose.Document{
     user_id: string;
     team: teams;
     userType: userInTeamType,
     isAdmin: boolean
 }
 
-interface IRoom {
+interface IRoom extends mongoose.Document{
     id: string;
     name: string;
     status: roomStatus;
-    cards: [ICard];
-    users: [IUserInRoom];    
+    cards: Array<ICard>;
+    users: Array<IUserInRoom>;
 }
 
 const userInRoomSchema = new mongoose.Schema({
@@ -40,11 +39,11 @@ const roomSchema = new mongoose.Schema({
     id: {type: String, required: true, unique: true},
     name: {type: String, required: true},
     status: {type: String, enum: ['WAITING', 'INITIALIZE', 'ACTIVE'], required: true},
-    cards: [cardModel],
-    users: [userModel]
+    cards: [CardSchema],
+    users: [userInRoomSchema]
 });
 
-const userInRoomModel= mongoose.model('UserInRoom', userInRoomSchema);
-const roomModel = mongoose.model('Room', roomSchema);
+const userInRoomModel= mongoose.model<IUserInRoom>('UserInRoom', userInRoomSchema);
+const roomModel = mongoose.model<IRoom>('Room', roomSchema);
 
-export {roomModel, userInRoomModel, roomStatus, teams, userInTeamType}
+export {roomModel, userInRoomModel, roomStatus, teams, userInTeamType, IUserInRoom, IRoom, userInRoomSchema}

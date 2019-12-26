@@ -1,45 +1,77 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 /* tslint:disable */
-const tsoa_1 = require("tsoa");
-const users_controller_1 = require("./Controller/users.controller");
-const models = {
-    "ITodo": {
+var tsoa_1 = require("tsoa");
+var users_controller_1 = require("./Controller/users.controller");
+var rooms_controller_1 = require("./Controller/rooms.controller");
+var models = {
+    "IUsers": {
         "properties": {
             "_id": { "dataType": "string", "required": true },
             "description": { "dataType": "string", "required": true },
         },
     },
 };
-const validationService = new tsoa_1.ValidationService(models);
+var validationService = new tsoa_1.ValidationService(models);
 function RegisterRoutes(app) {
     app.get('/users', function (request, response, next) {
-        const args = {};
-        let validatedArgs = [];
+        var args = {};
+        var validatedArgs = [];
         try {
             validatedArgs = getValidatedArgs(args, request);
         }
         catch (err) {
             return next(err);
         }
-        const controller = new users_controller_1.UsersController();
-        const promise = controller.getAll.apply(controller, validatedArgs);
+        var controller = new users_controller_1.UsersController();
+        var promise = controller.getAll.apply(controller, validatedArgs);
         promiseHandler(controller, promise, response, next);
     });
     app.post('/users', function (request, response, next) {
-        const args = {
+        var args = {
             name: { "in": "body-prop", "name": "name", "required": true, "dataType": "string" },
             password: { "in": "body-prop", "name": "password", "required": true, "dataType": "string" }
         };
-        let validatedArgs = [];
+        var validatedArgs = [];
         try {
             validatedArgs = getValidatedArgs(args, request);
         }
         catch (err) {
             return next(err);
         }
-        const controller = new users_controller_1.UsersController();
-        const promise = controller.create.apply(controller, validatedArgs);
+        var controller = new users_controller_1.UsersController();
+        var promise = controller.create.apply(controller, validatedArgs);
+        promiseHandler(controller, promise, response, next);
+    });
+    app.get('/rooms', function (request, response, next) {
+        var args = {};
+        var validatedArgs = [];
+        try {
+            validatedArgs = getValidatedArgs(args, request);
+        }
+        catch (err) {
+            return next(err);
+        }
+        var controller = new rooms_controller_1.RoomsController();
+        var promise = controller.getAll.apply(controller, validatedArgs);
+        promiseHandler(controller, promise, response, next);
+    });
+    app.post('/rooms', function (request, response, next) {
+        var args = {
+            name: { "in": "body-prop", "name": "name", "required": true, "dataType": "string" },
+            status: { "in": "body-prop", "name": "status", "required": true, "dataType": "string" },
+            cards: { "in": "body-prop", "name": "cards", "required": true, "dataType": "cards" },
+            users: { "in": "body-prop", "name": "users", "required": true, "dataType": "userInRoom" }
+        };
+        var validatedArgs = [];
+        try {
+            validatedArgs = getValidatedArgs(args, request);
+        }
+        catch (err) {
+            return next(err);
+        }
+        var controller = new rooms_controller_1.RoomsController();
+        var promise = controller.create.apply(controller, validatedArgs);
         promiseHandler(controller, promise, response, next);
     });
     function isController(object) {
@@ -47,12 +79,12 @@ function RegisterRoutes(app) {
     }
     function promiseHandler(controllerObj, promise, response, next) {
         return Promise.resolve(promise)
-            .then((data) => {
-            let statusCode;
+            .then(function (data) {
+            var statusCode;
             if (isController(controllerObj)) {
-                const headers = controllerObj.getHeaders();
-                Object.keys(headers).forEach((name) => {
-                    response.set(name, headers[name]);
+                var headers_1 = controllerObj.getHeaders();
+                Object.keys(headers_1).forEach(function (name) {
+                    response.set(name, headers_1[name]);
                 });
                 statusCode = controllerObj.getStatus();
             }
@@ -63,12 +95,12 @@ function RegisterRoutes(app) {
                 response.status(statusCode || 204).end();
             }
         })
-            .catch((error) => next(error));
+            .catch(function (error) { return next(error); });
     }
     function getValidatedArgs(args, request) {
-        const fieldErrors = {};
-        const values = Object.keys(args).map((key) => {
-            const name = args[key].name;
+        var fieldErrors = {};
+        var values = Object.keys(args).map(function (key) {
+            var name = args[key].name;
             switch (args[key].in) {
                 case 'request':
                     return request;
@@ -91,3 +123,4 @@ function RegisterRoutes(app) {
     }
 }
 exports.RegisterRoutes = RegisterRoutes;
+//# sourceMappingURL=routes.js.map

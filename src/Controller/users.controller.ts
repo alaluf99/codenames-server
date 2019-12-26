@@ -5,10 +5,11 @@ import {v4 as uuid} from 'uuid'
 @Route('/users')
 export class UsersController extends Controller {
 	@Get()
+	//TODO: SECURE THE PASSWORD
 	public async getAll(): Promise<IUser[]> {
 		try {
 			let items: any = await userModel.find({});
-			items = items.map((item) => { return {id: item._id, description: item.description}});
+			items = items.map((item) => { return {id: item.id, name: item.name, password: item.password}});
 			return items;
 		} catch (err) {
 			this.setStatus(500);
